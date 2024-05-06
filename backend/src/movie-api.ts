@@ -1,6 +1,6 @@
 const apikey = process.env.API_KEY
 
-export const searchMovies = async (searchTerm: string) => {
+export const searchMovies = async (searchTerm: string, page: number) => {
     if (!apikey) {
         throw new Error("API Key not found")
     }
@@ -10,7 +10,8 @@ export const searchMovies = async (searchTerm: string) => {
     const queryParams = {
         apikey,
         s: searchTerm,
-        page: "10"
+        page: "10",
+        offset: (page * 10).toString(),
     }
     url.search = new URLSearchParams(queryParams).toString()
 

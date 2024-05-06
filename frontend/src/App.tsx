@@ -11,7 +11,7 @@ const App = () => {
     e.preventDefault()
     try {
       const movies = await api.searchMovies(searchTerm, 1)
-      setMovies(movies.results)
+      setMovies(movies.Search)
     } catch(e) {
       console.log(e)
     }
