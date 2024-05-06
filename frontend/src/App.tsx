@@ -29,10 +29,7 @@ const App = () => {
       </form>
       
       {movies.map((movie) => (
-        <div>
-          Movie image location: {movie.Poster}
-          Movie title: {movie.Title}
-        </div>
+        <MovieCard />
       ))}
     </div>
   )
