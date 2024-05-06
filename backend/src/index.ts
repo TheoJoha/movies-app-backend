@@ -1,5 +1,7 @@
 import express from 'express'
+require('dotenv').config()
 import cors from 'cors'
+import * as MovieAPI from './movie-api'
 
 const app = express()
 
@@ -7,7 +9,11 @@ app.use(express.json())
 app.use(cors())
 
 app.get("/api/movies/search", async (req, res) => {
-    res.json({message: 'success!'})
+    // GET http://localhost/api/movies/search?searchTerm=Avatar
+    const searchTerm = req.query.searchTerm as string;
+    const results = await MovieAPI.searchMovies(searchTerm)
+
+    return res.json(results)
 })
 
 app.listen(3000, () => {
