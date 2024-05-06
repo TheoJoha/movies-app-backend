@@ -1,11 +1,13 @@
 import './App.css';
-import {FormEvent, useState} from 'react'
+import {FormEvent, useRef, useState} from 'react'
 import * as api from '../api'
 import { Movie } from './types';
+import { MovieCard } from './components/MovieCard';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState<string>("dramas");
   const [movies, setMovies] = useState<Movie[]>([])
+  const pageNumber = useRef(1);
 
   const handleSearchSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -13,6 +15,17 @@ const App = () => {
       const movies = await api.searchMovies(searchTerm, 1)
       setMovies(movies.Search)
     } catch(e) {
+      console.log(e)
+    }
+  }
+
+  const handleViewMoreClick = await () => {
+    const nextPage = pageNumber.current + 1
+    try {
+      const nextMovies = await api.searchMovies(searchTerm, nextPage)
+      setMovies([...movies, nextMovies.Search])
+      pageNumber.current = nextPage
+    } catch (e) {
       console.log(e)
     }
   }
@@ -29,8 +42,11 @@ const App = () => {
       </form>
       
       {movies.map((movie) => (
-        <MovieCard />
+        <MovieCard movie={movie} />
       ))}
+      <button className="view-more-button"
+      onClick={handleView}
+      >View More</button>
     </div>
   )
 }

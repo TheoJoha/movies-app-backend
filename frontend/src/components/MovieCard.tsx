@@ -4,7 +4,7 @@ interface Props {
     movie: Movie
 }
 
-const MovieCard = ({movie}: Props) => {
+export const MovieCard = ({movie}: Props) => {
     return (
         <div className="movie-card">
             <img alt="pic" src={movie.Poster}></img>
