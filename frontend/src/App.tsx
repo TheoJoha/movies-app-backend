@@ -1,34 +1,40 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import './App.css';
+import {FormEvent, useState} from 'react'
+import * as api from '../api'
+import { Movie } from './types';
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("dramas");
+  const [movies, setMovies] = useState<Movie[]>([])
+
+  const handleSearchSubmit = async (e: FormEvent) => {
+    e.preventDefault()
+    try {
+      const movies = await api.searchMovies(searchTerm, 1)
+      setMovies(movies.results)
+    } catch(e) {
+      console.log(e)
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div>
+      <form onSubmit={(e)=> handleSearchSubmit(e)}>
+        <input type="text" 
+        placeholder="Enter a search term ..." required
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        ></input>
+        <button type="submit">Submit</button>
+      </form>
+      
+      {movies.map((movie) => (
+        <div>
+          Movie image location: {movie.Poster}
+          Movie title: {movie.Title}
+        </div>
+      ))}
+    </div>
   )
 }
 

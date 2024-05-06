@@ -9,7 +9,8 @@ export const searchMovies = async (searchTerm: string) => {
 
     const queryParams = {
         apikey,
-        t: searchTerm
+        s: searchTerm,
+        page: "10"
     }
     url.search = new URLSearchParams(queryParams).toString()
 
