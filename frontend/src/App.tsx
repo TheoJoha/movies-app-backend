@@ -14,12 +14,13 @@ const App = () => {
     try {
       const movies = await api.searchMovies(searchTerm, 1)
       setMovies(movies.Search)
+      pageNumber.current = 1
     } catch(e) {
       console.log(e)
     }
   }
 
-  const handleViewMoreClick = await () => {
+  const handleViewMoreClick = async () => {
     const nextPage = pageNumber.current + 1
     try {
       const nextMovies = await api.searchMovies(searchTerm, nextPage)
@@ -45,7 +46,7 @@ const App = () => {
         <MovieCard movie={movie} />
       ))}
       <button className="view-more-button"
-      onClick={handleView}
+      onClick={handleViewMoreClick}
       >View More</button>
     </div>
   )
