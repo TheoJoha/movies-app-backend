@@ -23,3 +23,19 @@ export const searchMovies = async (searchTerm: string, page: number) => {
         console.log(error)
     }
 }
+
+export const getMovieSummary = async (movieId: string) => {
+    if (!apikey) {
+        throw new Error("API kei not found!")
+    }
+    const url = new URL(`https://www.omdbapi.com/?i=${movieId}`);
+    const params = {
+        apikey: apikey
+    }
+    url.search = new URLSearchParams(params).toString()
+
+    const response = await fetch(url);
+    const json = await response.json()
+
+    return json;
+}

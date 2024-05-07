@@ -3,10 +3,12 @@ import {FormEvent, useRef, useState} from 'react'
 import * as api from '../api'
 import { Movie } from './types';
 import { MovieCard } from './components/MovieCard';
+import MovieModal from './components/MovieModal';
 
 const App = () => {
   const [searchTerm, setSearchTerm] = useState<string>("dramas");
   const [movies, setMovies] = useState<Movie[]>([])
+  const [selectedMovie, setSelectedMovie] = useState<Movie | undefined>(undefined)
   const pageNumber = useRef(1);
 
   const handleSearchSubmit = async (e: FormEvent) => {
@@ -43,11 +45,13 @@ const App = () => {
       </form>
       
       {movies.map((movie) => (
-        <MovieCard movie={movie} />
+        <MovieCard movie={movie} onClick={()=> setSelectedMovie(movie)}/>
       ))}
       <button className="view-more-button"
       onClick={handleViewMoreClick}
       >View More</button>
+
+      {selectedMovie ? <MovieModal movieId={selectedMovie.imdbID.toString()} onClose={()=> setSelectedMovie(undefined)}/> : null}
     </div>
   )
 }

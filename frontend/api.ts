@@ -11,3 +11,14 @@ export const searchMovies = async (searchTerm: string, page: number) => {
     return response.json()
 
 }
+
+export const getMovieSummary = async (movieId: string) => {
+    const url = new URL(`http://localhost:3000/api/movies/${movieId}/summary`)
+    const response = await fetch(url)
+
+    if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`)
+    }
+
+    return response.json()
+}

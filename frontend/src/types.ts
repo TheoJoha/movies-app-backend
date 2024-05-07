@@ -10,4 +10,11 @@ export interface Movie {
     Country: string;
     Awards: string;
     imdbRating: number;
+    imdbID: number;
+}
+
+export interface MovieSummary {
+    id: number;
+    title: string;
+    summary: string;
 }
