@@ -15,5 +15,5 @@ datasource db {
 
 model FavouriteMovies {
   id Int @id @default(autoincrement())
-  recipeID Int 
+  movieId Int @unique
 }

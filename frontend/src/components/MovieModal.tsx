@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import { MovieSummary } from "../types"
-import * as MovieAPI from '../types'
+import * as MovieAPI from '../api'
 
 interface Props {
     movieId: string;

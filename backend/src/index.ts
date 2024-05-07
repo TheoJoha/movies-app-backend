@@ -19,7 +19,7 @@ app.get("/api/movies/search", async (req, res) => {
     return res.json(results)
 })
 
-app.get("/api/movies/:movieId/Summary", async (req, res) => {
+app.get("/api/movies/:movieId/summary", async (req, res) => {
    const movieId = req.params.movieId;
    const results = await MovieAPI.getMovieSummary(movieId)
    return res.json(results)
@@ -29,12 +29,50 @@ app.post("/api/movies/favourite", async (req, res) => {
     const movieId = req.body.movieId;
 
     try {
-
+        const favouriteMovie = await prismaClient.favouriteMovies.create({
+            data: {
+                movieId: movieId,
+            },
+        })
+        return res.status(201).json()
     } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: "Oops, something went wrong!"})
+    }
+})
 
+/* app.get("/api/movies/favourite", async (req, res) => {
+    try {
+        const movies = await prismaClient.favouriteMovies.findMany();
+        const movieIds = movies.map((movie) => {
+            return movie.imdbId.toString()
+        })
+
+        const favourites = await MovieAPI.getFavouriteMoviesByIds(movieIds)
+
+        return res.json(favourites)
+    } catch (error) {
+        console.log(error)
+    }
+}) */
+
+app.delete("/api/movies/favourite", async (req, res) => {
+    const movieId = req.body.movieId;
+
+    try {
+        await prismaClient.favouriteMovies.delete({
+            where: {
+                movieId: movieId
+            }
+        })
+        return res.status(204).send()
+    } catch (error) {
+        console.log(error)
+        return res.status(500).json({error: "Oops, something went wrong!"})
     }
 })
 
 app.listen(3000, () => {
     console.log("server running on localhost:3000")
+    
 })

@@ -1,3 +1,5 @@
+import { URLSearchParams } from "url"
+
 const apikey = process.env.API_KEY
 
 export const searchMovies = async (searchTerm: string, page: number) => {
@@ -39,3 +41,21 @@ export const getMovieSummary = async (movieId: string) => {
 
     return json;
 }
+
+/* const getFavouriteMoviesByIds = async (ids: string[]) => {
+    if (!apikey) {
+        throw new Error("API kei not found!")
+    }
+    const url = new URL("https://www.omdbapi.com/?");
+
+    const params = {
+        apikey: apikey,
+        ids: ids.join(',')
+    }
+    url.search = new URLSearchParams(params).toString()
+
+    const searchResponse = await fetch(url)
+    const json = await searchResponse.json()
+
+    return {results: json};
+} */
