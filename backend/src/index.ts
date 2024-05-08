@@ -20,13 +20,13 @@ app.get("/api/movies/search", async (req, res) => {
 })
 
 app.get("/api/movies/:movieId/summary", async (req, res) => {
-   const movieId = req.params.movieId;
-   const results = await MovieAPI.getMovieSummary(movieId)
+   const imdbID = req.params.movieId;
+   const results = await MovieAPI.getMovieSummary(imdbID)
    return res.json(results)
 })
 
 app.post("/api/movies/favourite", async (req, res) => {
-    const movieId = req.body.movieId;
+    const movieId = req.body.imdbID;
 
     try {
         const favouriteMovie = await prismaClient.favouriteMovies.create({
@@ -62,8 +62,8 @@ app.delete("/api/movies/favourite", async (req, res) => {
     try {
         await prismaClient.favouriteMovies.delete({
             where: {
-                movieId: movieId
-            }
+                movieId: movieId,
+            },
         })
         return res.status(204).send()
     } catch (error) {
@@ -74,5 +74,4 @@ app.delete("/api/movies/favourite", async (req, res) => {
 
 app.listen(3000, () => {
     console.log("server running on localhost:3000")
-    
 })

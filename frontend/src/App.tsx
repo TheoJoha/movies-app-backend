@@ -4,6 +4,7 @@ import * as api from './api'
 import { Movie } from './types';
 import { MovieCard } from './components/MovieCard';
 import MovieModal from './components/MovieModal';
+import { AiOutlineSearch } from 'react-icons/ai';
 
 type Tabs = "search" | "favourites";
 
@@ -23,7 +24,7 @@ const App = () => {
       } catch (error) {
         console.log(error)
       }
-  }
+    }
 
     fetchFavouriteMovies();
 
@@ -51,11 +52,42 @@ const App = () => {
     }
   }
 
+  const addFavouriteMovie = async (movie: Movie) => {
+    try {
+      await api.addFavouriteMovie(movie)
+      setFavouriteMovies([...favouriteMovies, movie])
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  const removeFavouriteMovie = async (movie: Movie) => {
+    try {
+      await api.removeFavouriteMovie(movie);
+      const updatedMovies = favouriteMovies.filter(
+        (favMovie) => movie.imdbID != favMovie.imdbID
+      );
+      setFavouriteMovies(updatedMovies)
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+
+
   return (
-    <div>
+    <div className="app-container">
+      <div className="header">
+        <img alt="cinema-pic" src="/hero-image.jpg"></img>
+        <div className="title"></div>
+      </div>
       <div className="tabs">
-        <h1 onClick={() => setSelectedTab("search")}>Movie Search</h1>
-        <h1 onClick={() => setSelectedTab("favourites")}>Favourites</h1>
+        <h1 
+        className={selectedTab === "search" ? "tab-active" : ""}
+        onClick={() => setSelectedTab("search")}>Movie Search</h1>
+        <h1 
+        className={selectedTab === "search" ? "tab-active" : ""}
+        onClick={() => setSelectedTab("favourites")}>Favourites</h1>
       </div>
       {selectedTab === "search" && (<>
         <form onSubmit={(e) => handleSearchSubmit(e)}>
@@ -64,21 +96,48 @@ const App = () => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           ></input>
-          <button type="submit">Submit</button>
+          <button type="submit">
+            <AiOutlineSearch size={35} />
+          </button>
         </form>
 
-        {movies.map((movie) => (
-          <MovieCard movie={movie} onClick={() => setSelectedMovie(movie)} />
-        ))}
+
+        <div className="movie-grid">
+          {movies.map((movie) => {
+            const isFavourite = favouriteMovies.some(
+              (favMovie) => movie.imdbID === favMovie.imdbID
+            );
+
+            return (
+              <MovieCard
+                movie={movie}
+                onClick={() => setSelectedMovie(movie)}
+                onFavouriteButtonClick={isFavourite ? removeFavouriteMovie : addFavouriteMovie
+                }
+                isFavourite={isFavourite}
+              />
+            )
+
+          })};
+        </div>
+
         <button className="view-more-button"
           onClick={handleViewMoreClick}
-        >View More</button>
+        >
+          View More
+        </button>
       </>)}
 
-      {selectedTab === "favourites" && <div>
-          {favouriteMovies.map((movie)=><MovieCard movie={movie} onClick={()=> setSelectedMovie(movie)} />)} 
+      {selectedTab === "favourites" && (
+        <div className="movie-grid">
+          {favouriteMovies.map((movie) => <MovieCard
+            movie={movie}
+            onClick={() => setSelectedMovie(movie)}
+            onFavouriteButtonClick={() => undefined}
+            isFavourite={true}
+          />)}
         </div>
-      }
+      )}
 
 
       {selectedMovie ? <MovieModal movieId={selectedMovie.imdbID.toString()} onClose={() => setSelectedMovie(undefined)} /> : null}
