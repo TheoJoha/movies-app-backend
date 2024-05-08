@@ -30,9 +30,10 @@ export const getMovieSummary = async (movieId: string) => {
     if (!apikey) {
         throw new Error("API kei not found!")
     }
-    const url = new URL(`https://www.omdbapi.com/?i=${movieId}`);
+    const url = new URL("https://www.omdbapi.com/?");
     const params = {
-        apikey: apikey
+        apikey: apikey,
+        i: movieId,
     }
     url.search = new URLSearchParams(params).toString()
 
@@ -42,20 +43,27 @@ export const getMovieSummary = async (movieId: string) => {
     return json;
 }
 
-/* const getFavouriteMoviesByIds = async (ids: string[]) => {
+export const getFavouriteMoviesByIds = async (ids: string[]) => {
     if (!apikey) {
         throw new Error("API kei not found!")
     }
-    const url = new URL("https://www.omdbapi.com/?");
 
-    const params = {
-        apikey: apikey,
-        ids: ids.join(',')
-    }
-    url.search = new URLSearchParams(params).toString()
+    let searchResponse = {}
+        
+    Promise.all(ids.map((imdbID) => {
+        const params = {
+            apikey: apikey,
+            i: imdbID
+        }
+        const url = new URL("https://www.omdbapi.com/?");
+        url.search = new URLSearchParams(params).toString()
+        searchResponse = fetch(url)
+})).then((values) => {/* DO STUFF */
+    console.log(values)
+    // const json = searchResponse.json()
+    return {};
 
-    const searchResponse = await fetch(url)
-    const json = await searchResponse.json()
-
-    return {results: json};
-} */
+});
+    return {}
+    
+} 

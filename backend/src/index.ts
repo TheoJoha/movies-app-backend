@@ -22,11 +22,12 @@ app.get("/api/movies/search", async (req, res) => {
 app.get("/api/movies/:movieId/summary", async (req, res) => {
    const imdbID = req.params.movieId;
    const results = await MovieAPI.getMovieSummary(imdbID)
+   console.log(results)
    return res.json(results)
 })
 
 app.post("/api/movies/favourite", async (req, res) => {
-    const movieId = req.body.imdbID;
+    const movieId = req.body.imdbID; // or movieId?
 
     try {
         const favouriteMovie = await prismaClient.favouriteMovies.create({
@@ -41,11 +42,11 @@ app.post("/api/movies/favourite", async (req, res) => {
     }
 })
 
-/* app.get("/api/movies/favourite", async (req, res) => {
+app.get("/api/movies/favourite", async (req, res) => {
     try {
         const movies = await prismaClient.favouriteMovies.findMany();
         const movieIds = movies.map((movie) => {
-            return movie.imdbId.toString()
+            return movie.movieId.toString()
         })
 
         const favourites = await MovieAPI.getFavouriteMoviesByIds(movieIds)
@@ -54,7 +55,7 @@ app.post("/api/movies/favourite", async (req, res) => {
     } catch (error) {
         console.log(error)
     }
-}) */
+})
 
 app.delete("/api/movies/favourite", async (req, res) => {
     const movieId = req.body.movieId;

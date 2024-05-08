@@ -16,6 +16,7 @@ const MovieModal = ({movieId, onClose}: Props) => {
             try {
                 const summaryMovie = await MovieAPI.
                 getMovieSummary(movieId)
+                console.log(movieId)
                 setMovieSummary(summaryMovie)
             } catch (error) {
                 console.log(error)
@@ -23,7 +24,7 @@ const MovieModal = ({movieId, onClose}: Props) => {
         }
 
         fetchMovieSummary()
-    })
+    }, [movieId])
 
     if (!movieSummary) {
         return <></>

@@ -20,6 +20,7 @@ const App = () => {
     const fetchFavouriteMovies = async () => {
       try {
         const favouriteMovies = await api.getFavouriteMovies();
+        console.log(favouriteMovies)
         setFavouriteMovies(favouriteMovies)
       } catch (error) {
         console.log(error)
@@ -103,13 +104,14 @@ const App = () => {
 
 
         <div className="movie-grid">
-          {movies.map((movie) => {
+          {movies && favouriteMovies && movies.map((movie) => {
             const isFavourite = favouriteMovies.some(
               (favMovie) => movie.imdbID === favMovie.imdbID
             );
 
             return (
               <MovieCard
+                key={movie.imdbID}
                 movie={movie}
                 onClick={() => setSelectedMovie(movie)}
                 onFavouriteButtonClick={isFavourite ? removeFavouriteMovie : addFavouriteMovie
@@ -130,7 +132,8 @@ const App = () => {
 
       {selectedTab === "favourites" && (
         <div className="movie-grid">
-          {favouriteMovies.map((movie) => <MovieCard
+          {favouriteMovies && favouriteMovies.map((movie) => <MovieCard
+            key={movie.imdbID}
             movie={movie}
             onClick={() => setSelectedMovie(movie)}
             onFavouriteButtonClick={() => undefined}
